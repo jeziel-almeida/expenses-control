@@ -2,9 +2,9 @@
   "name": "expenses-control",
   "version": "1.0.0",
   "description": "expenses control with express and nodejs",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "node src/index.js",
+    "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jeziel Almeida",
