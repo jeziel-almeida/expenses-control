@@ -67,4 +67,48 @@ describe("Transaction Controller", () => {
             })
         })
     })
+
+    describe("given find transactions by uid", () => {
+
+        test("when success, then return status 200", async () => {
+
+            const controller = new TransactionController({
+                findByUid: () => Promise.resolve()
+            });
+
+            const request = { params: { uid: 1 } };
+
+            await controller.findByUid(request, response);
+
+            expect(response._status).toEqual(200);
+        })
+        
+        test("when success, then return transaction", async () => {
+
+            const transaction = {
+                findByUid: () => Promise.resolve()
+            }
+
+            const controller = new TransactionController(transaction);
+
+            const request = { params: { uid: 1 } };
+
+            await controller.findByUid(request, response);
+
+            expect(response._json).toEqual(transaction);
+        })
+
+        test("when fail, then return error status", async () => {
+
+            const controller = new TransactionController({
+                findByUid: () => Promise.reject({ code: 400 })
+            });
+
+            const request = { params: { uid: 1 } };
+
+            await controller.findByUid(request, response);
+
+            expect(response._json).toEqual({ code: 400 });
+        })
+    })
 })
