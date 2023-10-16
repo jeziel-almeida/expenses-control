@@ -15,41 +15,45 @@ describe("Authenticate JWT", () => {
         expect(response._status).toEqual(401);
     })
 
-    test("given authorization header, when invalid, then return error 401", async () => {
+    describe("given authorization header", () => {
 
-        const request = {
-            headers: {
-                authorization: "Invalid"
+        test("when invalid, then return error 401", async () => {
+    
+            const request = {
+                headers: {
+                    authorization: "Invalid"
+                }
             }
-        }
-        const response = new ResponseMock();
-        const next = () => {};
-        const auth = {
-            verifyIdToken: () => Promise.reject()
-        }
-
-        await authenticateToken(request, response, next, auth);
-
-        expect(response._status).toEqual(401);
+            const response = new ResponseMock();
+            const next = () => {};
+            const auth = {
+                verifyIdToken: () => Promise.reject()
+            }
+    
+            await authenticateToken(request, response, next, auth);
+    
+            expect(response._status).toEqual(401);
+        })
+    
+        test("when valid, then add user to request", async () => {
+    
+            const request = {
+                headers: {
+                    authorization: "Valid"
+                }
+            }
+            const response = new ResponseMock();
+            const next = () => {};
+            const auth = {
+                verifyIdToken: () => ({ sub: "anyUserUid" })
+            }
+    
+            await authenticateToken(request, response, next, auth);
+    
+            expect(request.user).toEqual({ uid: "anyUserUid"});
+        })
     })
 
-    test("given authorization header, when valid, then add user to request", async () => {
-
-        const request = {
-            headers: {
-                authorization: "Valid"
-            }
-        }
-        const response = new ResponseMock();
-        const next = () => {};
-        const auth = {
-            verifyIdToken: () => ({ sub: "anyUserUid" })
-        }
-
-        await authenticateToken(request, response, next, auth);
-
-        expect(request.user).toEqual({ uid: "anyUserUid"});
-    })
 
     class ResponseMock {
         _status;
