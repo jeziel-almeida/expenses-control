@@ -111,4 +111,80 @@ describe("Transaction Controller", () => {
             expect(response._json).toEqual({ code: 400 });
         })
     })
+
+    describe("given create new transaction", () => {
+
+        test("when success, then return status 201", async () => {
+
+            const controller = new TransactionController({
+                create: () => Promise.resolve()
+            });
+
+            const request = { body: {} }
+
+            await controller.create(request, response);
+
+            expect(response._status).toEqual(201)
+        })
+
+        test("when success, then return transaction", async () => {
+
+            const transaction = {
+                create: () => Promise.resolve()
+            }
+
+            const controller = new TransactionController(transaction);
+
+            const request = { body: { uid: 1 } }
+
+            await controller.create(request, response);
+
+            expect(response._json).toEqual(transaction)
+        })
+
+        test("then transaction should belong to user on request", async () => {
+
+            const transaction = {
+                create: () => Promise.resolve()
+            }
+
+            const controller = new TransactionController(transaction);
+
+            const request = { body: {}, user: { uid: "anyUserUid" } }
+
+            await controller.create(request, response);
+
+            expect(response._json.user).toEqual({ uid: "anyUserUid" })
+        })
+
+        test("then fail, then return error status", async () => {
+
+            const transaction = {
+                create: () => Promise.reject({ code: 500 })
+            }
+
+            const controller = new TransactionController(transaction);
+
+            const request = { body: {}, user: { uid: "anyUserUid" } }
+
+            await controller.create(request, response);
+
+            expect(response._status).toEqual(500)
+        })
+
+        test("then fail, then return error", async () => {
+
+            const transaction = {
+                create: () => Promise.reject({ code: 500 })
+            }
+
+            const controller = new TransactionController(transaction);
+
+            const request = { body: {}, user: { uid: "anyUserUid" } }
+
+            await controller.create(request, response);
+
+            expect(response._json).toEqual({ code: 500 })
+        })
+    })
 })
