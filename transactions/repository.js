@@ -27,4 +27,15 @@ export class TransactionRepository {
             
         return snapshot.data();
     }
+
+    async save(transaction) {
+
+        const response = await admin.firestore()
+            .collection('transactions')
+            .add(JSON.parse(JSON.stringify(transaction)));
+
+        return {
+            uid: response.id
+        }
+    }
 }
