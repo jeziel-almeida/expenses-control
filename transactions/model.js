@@ -34,7 +34,7 @@ export class Transaction {
             return Promise.reject(new TransactionUidNotInformedError());
         }
 
-        this.#repository.findByUid(this.uid).then(transactionDb => {
+        return this.#repository.findByUid(this.uid).then(transactionDb => {
             if (!transactionDb) {
                 return Promise.reject(new TransactionNotFoundError());
             }
