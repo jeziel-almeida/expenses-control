@@ -2,18 +2,29 @@ import admin from 'firebase-admin';
 
 export class TransactionRepository {
 
-    findByUserUid(uid) {
-        return admin.firestore()
+    async findByUserUid(uid) {
+
+        const snapshot = await admin.firestore()
             .collection('transactions')
             .where('user.uid', '==', uid)
             .orderBy('date', 'desc')
-            .get()
-            .then(snapshot => {
-                const transactions = snapshot.docs.map(doc => ({
-                    ...doc.data(),
-                    uid: doc.id
-                }))
-                return transactions;
-            })
+            .get();
+
+        const listTransactions = snapshot.docs.map(doc => ({
+            ...doc.data(),
+            uid: doc.id
+        }))
+
+        return listTransactions;
+    }
+
+    async findByUid(uid) {
+
+        const snapshot = await admin.firestore()
+            .collection('transactions')
+            .doc(uid)
+            .get();
+            
+        return snapshot.data();
     }
 }
