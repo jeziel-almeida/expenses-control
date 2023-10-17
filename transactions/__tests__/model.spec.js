@@ -1,5 +1,7 @@
-import { TransactionUidNotInformedError } from "../erros/transaction-uid-not-informed.error.js";
-import { UserNotInformedError } from "../erros/user-not-informed.error.js";
+import { TransactionNotFoundError } from "../errors/transaction-not-found.error.js";
+import { TransactionUidNotInformedError } from "../errors/transaction-uid-not-informed.error.js";
+import { UserDoesntOwnTransactionError } from "../errors/user-doesnt-own-transaction.error.js";
+import { UserNotInformedError } from "../errors/user-not-informed.error.js";
 import { Transaction } from "../model.js";
 
 describe("Transaction Model", () => {
@@ -54,6 +56,7 @@ describe("Transaction Model", () => {
             });
 
             model.uid = 1;
+            model.user = { uid: "anyUserUid" }
 
             await model.findByUid();
 
@@ -67,16 +70,29 @@ describe("Transaction Model", () => {
             await expect(model.findByUid()).rejects.toBeInstanceOf(TransactionUidNotInformedError);
         })
 
-        //* Test not working as it should
-        // test("when transaction not found, then return error 404", async () => {
+        test("when user doesn't own transaction, then return 403 error", async () => {
 
-        //     const model = new Transaction({
-        //         findByUid: () => Promise.resolve(null)
-        //     });
-        //     model.uid = 9;
+            const transactionDb = createTransaction();
+            transactionDb.user = { uid: "anyOtherUserUid" }
 
-        //     await expect(model.findByUid()).rejects.toBeInstanceOf(TransactionNotFoundError);
-        // })
+            const model = new Transaction({
+                findByUid: () => Promise.resolve(transactionDb) 
+            });
+            model.uid = 9;
+            model.user = { uid: "anyUserUid" }
+
+            await expect(model.findByUid()).rejects.toBeInstanceOf(UserDoesntOwnTransactionError)
+        })
+
+        test("when transaction not found, then return error 404", async () => {
+
+            const model = new Transaction({
+                findByUid: () => Promise.resolve(null)
+            });
+            model.uid = 9;
+
+            await expect(model.findByUid()).rejects.toBeInstanceOf(TransactionNotFoundError);
+        })
 
         function createTransaction() {
             const transaction = new Transaction();
