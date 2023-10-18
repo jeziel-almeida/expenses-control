@@ -187,4 +187,91 @@ describe("Transaction Controller", () => {
             expect(response._json).toEqual({ code: 500 })
         })
     })
+
+    describe("given update transaction", () => {
+
+        const user = { uid: "anyUserUid" };
+        
+        const request = { params: {uid: "anyUid"}, user };
+
+        let transactionMock;
+
+        beforeEach(() => {
+
+            transactionMock = {
+                _hasUpdated: false,
+                update() {
+                    this._hasUpdated = true;
+                    return Promise.resolve();
+                } 
+            }
+        })
+
+        test("when success, then return status 200", async () => {
+
+            const controller = new TransactionController(transactionMock);
+            
+            await controller.update(request, response);
+
+            expect(response._status).toEqual(200)
+        })
+
+        test("when success, then return transaction", async () => {
+
+            const controller = new TransactionController(transactionMock);
+
+            await controller.update(request, response)
+
+            expect(response._json).toEqual(transactionMock)
+        })
+
+        test("then transaction should belong to user on request", async () => {
+
+            const controller = new TransactionController(transactionMock);
+
+            await controller.update(request, response)
+
+            expect(response._json.user).toEqual(user)
+        })
+
+        test("then transaction should have uid from request", async () => {
+  
+            const controller = new TransactionController(transactionMock);
+
+            await controller.update(request, response)
+
+            expect(response._json.uid).toEqual("anyUid");
+        })
+
+        test("then update transaction", async () => {
+
+            const controller = new TransactionController(transactionMock);
+
+            await controller.update(request, response)
+
+            expect(transactionMock._hasUpdated).toBeTruthy();
+        })
+
+        test("when fail, then return error status", async () => {
+
+            const controller = new TransactionController({
+                update: () => Promise.reject({ code: 500 })
+            });
+
+            await controller.update(request, response)
+
+            expect(response._status).toEqual(500)
+        })
+
+        test("when fail, then return error", async () => {
+
+            const controller = new TransactionController({
+                update: () => Promise.reject({ code: 500 })
+            });
+
+            await controller.update(request, response)
+
+            expect(response._json).toEqual({ code: 500 })
+        })
+    })
 })
