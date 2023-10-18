@@ -64,4 +64,19 @@ export class Transaction {
             this.uid = response.uid;
         })
     }
+
+    update(params) {
+
+        return this.findByUid(this.uid).then(() => {
+            
+            this.date = params.date;
+            this.description = params.description;
+            this.money = params.money;
+            this.transactionType = params.transactionType;
+            this.type = params.type;
+            this.user = params.user;
+    
+            return this.#repository.update(this);
+        })
+    }
 }
