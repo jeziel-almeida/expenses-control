@@ -1,5 +1,5 @@
 import { BadRequestError } from "../../errors/bad-request.error.js";
-import { validateTransaction } from "../create-transaction-validator.js";
+import { validateTransaction } from "../transaction-validator.js";
 
 describe("Create Transaction Validator", () => {
 
