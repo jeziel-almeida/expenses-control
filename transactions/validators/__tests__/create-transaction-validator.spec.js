@@ -1,5 +1,5 @@
 import { BadRequestError } from "../../errors/bad-request.error.js";
-import { validateCreateTransaction } from "../create-transaction-validator.js";
+import { validateTransaction } from "../create-transaction-validator.js";
 
 describe("Create Transaction Validator", () => {
 
@@ -37,7 +37,7 @@ describe("Create Transaction Validator", () => {
 
         request = { body: { date: null } }
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._status).toEqual(400);
     })
@@ -46,7 +46,7 @@ describe("Create Transaction Validator", () => {
 
         request = { body: { date: null } }
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._json).toBeInstanceOf(BadRequestError);
     })
@@ -55,7 +55,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.date = "Invalid";
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._status).toEqual(400);
     })
@@ -64,7 +64,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.date = "Invalid";
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._json).toBeInstanceOf(BadRequestError);
     })
@@ -73,7 +73,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.money = null;
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._status).toEqual(400);
     })
@@ -82,7 +82,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.money = null;
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._json).toBeInstanceOf(BadRequestError);
     })
@@ -91,7 +91,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.money.currency = null;
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._status).toEqual(400);
     })
@@ -100,7 +100,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.money.currency = null;
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._json).toBeInstanceOf(BadRequestError);
     })
@@ -109,7 +109,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.money.value = 0;
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._status).toEqual(400);
     })
@@ -118,7 +118,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.money.value = 0;
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._json).toBeInstanceOf(BadRequestError);
     })
@@ -127,7 +127,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.transactionType = null;
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._status).toEqual(400);
     })
@@ -136,7 +136,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.transactionType = null;
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._json).toBeInstanceOf(BadRequestError);
     })
@@ -145,7 +145,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.type = null;
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._status).toEqual(400);
     })
@@ -154,7 +154,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.type = null;
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._json).toBeInstanceOf(BadRequestError);
     })
@@ -163,7 +163,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.type = "anyOtherType";
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._status).toEqual(400);
     })
@@ -172,7 +172,7 @@ describe("Create Transaction Validator", () => {
 
         request.body.type = "anyOtherType";
 
-        validateCreateTransaction(request, response);
+        validateTransaction(request, response);
 
         expect(response._json).toBeInstanceOf(BadRequestError);
     })
@@ -182,7 +182,7 @@ describe("Create Transaction Validator", () => {
         let hasCalledNext = false;
         const next = () => { hasCalledNext = true }
 
-        validateCreateTransaction(request, response, next);
+        validateTransaction(request, response, next);
 
         expect(hasCalledNext).toBeTruthy();
     })
