@@ -38,4 +38,19 @@ export class TransactionRepository {
             uid: response.id
         }
     }
+
+    async update(transaction) {
+        const response = await admin.firestore()
+            .collection('transactions')
+            .doc(transaction.uid)
+            .update({
+                date: transaction.date,
+                description: transaction.description,
+                money: transaction.money,
+                transactionType: transaction.transactionType,
+                type: transaction.type
+            })
+
+        return response;
+    }
 }
