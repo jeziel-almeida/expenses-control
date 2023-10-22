@@ -274,4 +274,85 @@ describe("Transaction Controller", () => {
             expect(response._json).toEqual({ code: 500 })
         })
     })
+
+    describe("given delete transaction", () => {
+
+        let response;
+
+        const user = { uid: "anyUserUid" };
+        const request = { params: {uid: "anyUid"}, user: {uid: "anyUserUid"} };
+
+        const transactionMock = {
+            _hasDeleted: false,
+            delete() {
+                this._hasDeleted = true;
+                return Promise.resolve();
+            }
+        }
+
+        beforeEach(() => {
+            response = new ResponseMock();
+        })
+
+        test("when success, then return status 200", async () => {
+
+            const controller = new TransactionController(transactionMock);
+
+            await controller.delete(request, response);
+
+            expect(response._status).toEqual(200);
+        })
+
+        test("then remove transaction", async () => {
+
+            const controller = new TransactionController(transactionMock);
+
+            await controller.delete(request, response);
+
+            expect(transactionMock._hasDeleted).toBeTruthy();
+        })
+
+        test("then transaction should belong to user from request", async () => {
+
+            const controller = new TransactionController(transactionMock);
+
+            await controller.delete(request, response);
+
+            expect(transactionMock.user).toEqual(user);
+        })
+
+        test("then transaction should have uid from request", async () => {
+
+            const controller = new TransactionController(transactionMock);
+
+            await controller.delete(request, response);
+
+            expect(transactionMock.uid).toEqual("anyUid");
+        })
+
+        test("when error, then return error status", async () => {
+
+            const controller = new TransactionController({
+                delete() {
+                    return Promise.reject({ code: 500 })
+                }
+            });
+
+            await controller.delete(request, response);
+
+            expect(response._status).toEqual(500);
+        })
+        test("when error, then return error", async () => {
+
+            const controller = new TransactionController({
+                delete() {
+                    return Promise.reject({ code: 500 })
+                }
+            });
+
+            await controller.delete(request, response);
+
+            expect(response._json).toEqual({ code: 500 });
+        })
+    })
 })
