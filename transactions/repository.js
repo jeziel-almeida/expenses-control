@@ -53,4 +53,14 @@ export class TransactionRepository {
 
         return response;
     }
+
+    async delete(transaction) {
+
+        const response = await admin.firestore()
+            .collection('transactions')
+            .doc(transaction.uid)
+            .delete();
+
+        return response;
+    }
 }
